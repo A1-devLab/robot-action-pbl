@@ -1,0 +1,30 @@
+# Local datasets: keep the directory placeholder only.
+/data/*
+!/data/.gitkeep
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local settings and secrets
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated model artifacts
+/models/
+*.joblib
+*.pkl
+
+# Local inspection summaries contain absolute data paths.
+episode_summary.csv

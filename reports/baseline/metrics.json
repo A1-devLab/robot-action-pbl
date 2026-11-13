@@ -1,0 +1,73 @@
+{
+  "accuracy": 0.5625,
+  "balanced_accuracy": 0.5423280423280423,
+  "precision_success": 0.59375,
+  "recall_success": 0.7037037037037037,
+  "f1_success": 0.6440677966101694,
+  "roc_auc": 0.5784832451499118,
+  "confusion_matrix_labels": [
+    0,
+    1
+  ],
+  "confusion_matrix": [
+    [
+      8,
+      13
+    ],
+    [
+      8,
+      19
+    ]
+  ],
+  "dummy_accuracy": 0.5625,
+  "folds": [
+    {
+      "fold": 1,
+      "n_train": 38,
+      "n_test": 10,
+      "accuracy": 0.7,
+      "f1": 0.7272727272727273
+    },
+    {
+      "fold": 2,
+      "n_train": 38,
+      "n_test": 10,
+      "accuracy": 0.5,
+      "f1": 0.5454545454545454
+    },
+    {
+      "fold": 3,
+      "n_train": 38,
+      "n_test": 10,
+      "accuracy": 0.6,
+      "f1": 0.7142857142857143
+    },
+    {
+      "fold": 4,
+      "n_train": 39,
+      "n_test": 9,
+      "accuracy": 0.5555555555555556,
+      "f1": 0.6666666666666666
+    },
+    {
+      "fold": 5,
+      "n_train": 39,
+      "n_test": 9,
+      "accuracy": 0.4444444444444444,
+      "f1": 0.5454545454545454
+    }
+  ],
+  "config": {
+    "seed": 42,
+    "n_splits": 5,
+    "n_episodes": 48,
+    "n_features": 208,
+    "C": 1.0,
+    "threshold": 0.5,
+    "python": "3.12.14",
+    "numpy": "2.5.4",
+    "pandas": "2.3.3",
+    "sklearn": "1.9.1",
+    "evaluation": "out-of-fold; no hyperparameter search"
+  }
+}
