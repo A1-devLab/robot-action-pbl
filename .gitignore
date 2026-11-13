@@ -1,6 +1,4 @@
-# Local datasets: keep the directory placeholder only.
-/data/*
-!/data/.gitkeep
+# Dataset CSVs are versioned; raw files should remain unchanged.
 
 # Python environments and generated files
 .venv/
