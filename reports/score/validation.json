@@ -1,0 +1,35 @@
+{
+  "single_feature_auc": {
+    "delta_hold_l_sh_r": 0.187,
+    "delta_hold_l_el_p": 0.76,
+    "rev_elp_hold": 0.257,
+    "t_retract": 0.265
+  },
+  "episode_number_auc": 0.741,
+  "equal_weights": {
+    "cv_auc_mean": 0.846,
+    "cv_auc_std": 0.006,
+    "auc_episodes_1_24": 0.733,
+    "auc_episodes_25_48": 0.935,
+    "spearman_with_episode_number": 0.724
+  },
+  "logistic": {
+    "cv_auc_mean": 0.799,
+    "cv_auc_std": 0.02,
+    "auc_episodes_1_24": 0.667,
+    "auc_episodes_25_48": 0.833,
+    "spearman_with_episode_number": 0.714
+  },
+  "score_by_label": {
+    "fail": 32.4,
+    "success": 66.7
+  },
+  "score_by_cluster_and_label": {
+    "C0_fail": 55.6,
+    "C0_success": 77.4,
+    "C1_fail": 40.2,
+    "C1_success": 32.1,
+    "C2_fail": 6.2,
+    "C2_success": 22.9
+  }
+}

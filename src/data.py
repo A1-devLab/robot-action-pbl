@@ -151,6 +151,40 @@ def load_dataset(data_dir: str | Path, *, strict: bool = True) -> list[Episode]:
     return episodes
 
 
+UNLABELED = -1
+ID_ISSUE = "filename and episode_index must identify the same episode"
+
+
+def load_folder(data_dir: str | Path) -> list[Episode]:
+    """Load episodes for scoring/demo where labels may be unknown.
+
+    If data_dir has fail/ and success/ folders they are used as labels; otherwise
+    every CSV directly inside data_dir is read with label -1. Invalid episodes are
+    kept (check summary["issues"]) so one bad file does not stop a demo run. File
+    names are free here, so the filename/episode_index check is not an issue.
+    """
+    root = Path(data_dir).resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"Missing data folder: {root}")
+    if all((root / name).is_dir() for name in LABELS):
+        sources = [(p, label) for name, label in LABELS.items()
+                   for p in sorted((root / name).glob("*.csv"))]
+    else:
+        sources = [(p, UNLABELED) for p in sorted(root.glob("*.csv"))]
+    if not sources:
+        raise ValueError(f"No CSV files in {root}")
+    episodes = []
+    for path, label in sources:
+        try:
+            episode = _read_episode(path, label)
+        except (OSError, UnicodeError, csv.Error) as error:
+            raise ValueError(f"Cannot read {path}: {error}") from error
+        episode.summary["issues"] = "; ".join(
+            i for i in episode.summary["issues"].split("; ") if i and i != ID_ISSUE)
+        episodes.append(episode)
+    return episodes
+
+
 def write_summary(episodes: list[Episode], output: str | Path) -> Path:
     """Write an inspection table; this is not a model input table."""
     if not episodes:
