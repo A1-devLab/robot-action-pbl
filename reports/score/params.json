@@ -1,0 +1,21 @@
+{
+  "mean": {
+    "delta_hold_l_sh_r": -0.34800091673333333,
+    "delta_hold_l_el_p": 0.22442658000000001,
+    "rev_elp_hold": 3.5625,
+    "t_retract": 2.227777777777778
+  },
+  "std": {
+    "delta_hold_l_sh_r": 0.07894341098773833,
+    "delta_hold_l_el_p": 0.12000068226445428,
+    "rev_elp_hold": 1.5930349703213256,
+    "t_retract": 0.46693114198779323
+  },
+  "std_s": 0.7703866905733796,
+  "directions": {
+    "delta_hold_l_sh_r": -1.0,
+    "delta_hold_l_el_p": 1.0,
+    "rev_elp_hold": -1.0,
+    "t_retract": -1.0
+  }
+}

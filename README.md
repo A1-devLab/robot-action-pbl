@@ -94,6 +94,50 @@ robot-action-pbl/
 
 검증 구현 참고: [scikit-learn 데이터 누출 방지](https://scikit-learn.org/stable/common_pitfalls.html), [StratifiedKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html).
 
+### 품질 점수 (과제 4)
+
+`src/score.py`는 에피소드 하나의 수행 품질을 0~100점으로 계산합니다. 공식과 기준 통계는 고정되어 있어 새 CSV에도 그대로 적용됩니다.
+
+```text
+z_i   = d_i × (x_i − mean_i) / std_i,  [-3, 3]으로 자름
+s     = (z_1 + z_2 + z_3 + z_4) / 4          (동일 가중치)
+score = 100 × Φ(s / std_s)                   (Φ: 표준정규 누적분포)
+```
+
+| i | 입력 | 방향 d | 의미 | 단일 AUC |
+|---|---|---|---|---|
+| 1 | `delta_hold_l_sh_r` | −1 | 옮기는 동안 어깨 roll이 안쪽으로 크게 돌아감 | 0.19 |
+| 2 | `delta_hold_l_el_p` | +1 | 옮기는 동안 팔꿈치를 상자 쪽으로 폄 | 0.76 |
+| 3 | `rev_elp_hold` | −1 | 옮기는 동안 팔꿈치 방향 전환 횟수 (망설임) | 0.26 |
+| 4 | `t_retract` | −1 | 놓은 뒤 끝날 때까지 걸린 시간 (s) | 0.27 |
+
+- mean, std, std_s는 1차 데이터 48개에서 계산해 `reports/score/params.json`에 저장합니다. 50점은 기준 데이터의 평균, 84점은 평균보다 1표준편차 좋은 동작입니다.
+- 출력에는 총점과 함께 하위 점수 `sub_carry`(1, 2), `sub_smooth`(3), `sub_exit`(4)가 있어 점수의 이유를 설명할 수 있습니다.
+- 손이 한 번도 닫히지 않은 에피소드는 0점(`no_grasp`), 읽을 수 없는 파일은 점수 없이 `invalid`로 표시합니다.
+- 입력 선택 근거: 성공·실패 분리력이 큰 특징 중 서로 겹치지 않는 것만 골랐습니다. `pose_grasp_l_sh_r`은 1번과 상관이 −0.90이라 제외했습니다. 데이터가 48개뿐이라 학습한 로지스틱 가중치보다 동일 가중치가 교차검증에서 더 좋았습니다.
+
+검증 결과 (`experiments/validate_score.py`, 5-fold × 시드 10개, 기준 통계는 학습 fold에서만 계산):
+
+| 항목 | 동일 가중치 | 로지스틱 가중치 |
+|---|---|---|
+| 교차검증 AUC | 0.846 ± 0.006 | 0.799 ± 0.020 |
+| AUC, 에피소드 1~24 | 0.733 | 0.667 |
+| AUC, 에피소드 25~48 | 0.935 | 0.833 |
+
+- 평균 점수는 성공 66.7점, 실패 32.4점입니다.
+- 점수와 에피소드 번호의 순위 상관은 0.72입니다. 뒤로 갈수록 성공률이 오르므로(1~24번 38%, 25~48번 75%) 조작 숙련도가 실제 품질에 반영된 것으로 보입니다. 다만 에피소드 번호만으로 얻는 AUC는 0.74이고, 점수는 앞뒤 절반 안에서도 성공과 실패를 구분하므로 녹화 순서만 따라가는 지표는 아닙니다.
+- 입력 4개는 48개 전체의 단일 AUC를 보고 골랐기 때문에 교차검증 수치는 약간 낙관적입니다.
+
+새 데이터 채점 (데모):
+
+```powershell
+# 라벨 없는 CSV 폴더 또는 success/, fail/ 폴더 모두 가능, 파일 이름 제한 없음
+.\.venv\Scripts\python.exe -m src.score --data-dir <새 데이터 폴더> --output reports/score/demo_scores.csv
+# 기준 통계 재계산 (1차 데이터 기준, 보통 필요 없음)
+.\.venv\Scripts\python.exe -m src.score --data-dir data --fit
+.\.venv\Scripts\python.exe -m experiments.validate_score
+```
+
 ## 공통 실험 원칙
 
 - 학습·평가 데이터는 에피소드 단위로 분리합니다.
@@ -105,4 +149,4 @@ robot-action-pbl/
 
 1. 오류 분류된 에피소드와 종료 구간의 움직임 분석
 2. 특징 수를 줄이거나 구간별 특징을 추가해 기준 모델과 비교
-3. 해석 가능한 군집화와 수행 품질 점수 설계
+3. 분류기, 군집, 품질 점수를 하나의 데모 스크립트로 묶기
