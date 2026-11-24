@@ -1,0 +1,49 @@
+ep,label,end_state_video,label_matches_video,fail_type,confidence,release_height_px_video,note
+1,0,lying in box,True,A,high,32,
+2,1,upright in box,True,,high,25,
+3,0,lying in box,True,A,moderate,12,"base at the rim when released, tips into the box"
+4,0,lying in box,True,A,high,34,
+5,0,lying in box,True,A,high,31,
+6,0,lying in box,True,A,high,32,
+7,0,lying in box,True,A,high,33,
+8,0,lying in box,True,A,high,44,
+9,1,upright in box,True,,high,32,
+10,0,lying in box,True,A,high,29,"released tilted, stands briefly then falls"
+11,0,lying in box,True,A,high,34,
+12,0,lying in box,True,A,high,50,released high
+13,0,lying in box,True,A,moderate,49,"released tilted, topples about 1 s later"
+14,1,upright in box,True,,high,40,
+15,0,lying in box,True,A,high,30,
+16,1,upright in box,True,,high,43,
+17,1,upright in box,True,,high,35,
+18,0,lying in box,True,A,high,62,released highest
+19,0,lying in box,True,B,high,-4,
+20,1,upright in box,True,,high,4,slow hand opening
+21,0,leaning on left wall,True,B,high,6,hand drags it toward the left wall; ends leaning on the wall
+22,1,upright in box,True,,high,14,
+23,1,upright in box,True,,high,57,released high but landed upright (lucky)
+24,1,upright in box,True,,high,4,
+25,0,lying in box,True,B,high,9,
+26,1,upright in box,True,,high,20,
+27,1,upright in box,True,,high,16,
+28,0,lying in box,True,A,moderate,29,lid high at release; moderate confidence
+29,1,upright in box,True,,high,-1,
+30,1,upright in box,True,,high,0,
+31,1,upright in box,True,,high,3,
+32,1,upright in box,True,,high,8,
+33,1,upright in box,True,,high,13,
+34,1,upright in box,True,,high,18,
+35,0,lying in box,True,B,high,10,
+36,1,upright in box,True,,high,10,
+37,1,upright in box,True,,high,5,
+38,1,upright in box,True,,high,22,
+39,1,upright in box,True,,high,14,
+40,1,upright in box,True,,high,19,
+41,1,upright in box,True,,high,23,"wobbles after release, ends upright in the near-left corner"
+42,1,upright in box,True,,high,25,
+43,1,upright in box,True,,high,23,
+44,0,lying in box,True,B,high,11,
+45,0,leaning on left wall,True,B,high,12,hand drags it toward the left wall; ends leaning on the wall
+46,1,upright in box,True,,high,19,
+47,1,upright in box,True,,high,16,
+48,0,lying in box,True,B,high,9,

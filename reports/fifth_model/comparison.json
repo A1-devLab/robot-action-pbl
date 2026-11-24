@@ -1,0 +1,182 @@
+{
+  "classifiers": {
+    "4th: v1 rule, inputs re-chosen in each training fold": {
+      "A_accuracy_mean": 0.6958333333333334,
+      "A_accuracy_std": 0.042898458920779155,
+      "A_balanced_accuracy_mean": 0.6888888888888889,
+      "A_roc_auc_mean": 0.8095238095238095,
+      "B_accuracy": 0.7083333333333334,
+      "B_balanced_accuracy": 0.7089947089947091,
+      "B_roc_auc": 0.7865961199294533
+    },
+    "v1 fixed: PR #4 inputs (optimistic)": {
+      "A_accuracy_mean": 0.7145833333333333,
+      "A_accuracy_std": 0.01874999999999999,
+      "A_balanced_accuracy_mean": 0.7097883597883597,
+      "A_roc_auc_mean": 0.8462081128747796,
+      "B_accuracy": 0.7291666666666666,
+      "B_balanced_accuracy": 0.7275132275132274,
+      "B_roc_auc": 0.8483245149911817
+    },
+    "v2 fixed: sh_r, el_p, rev, thumb_open (optimistic, video-informed)": {
+      "A_accuracy_mean": 0.8291666666666666,
+      "A_accuracy_std": 0.020412414523193142,
+      "A_balanced_accuracy_mean": 0.8275132275132275,
+      "A_roc_auc_mean": 0.8837742504409173,
+      "B_accuracy": 0.8333333333333334,
+      "B_balanced_accuracy": 0.8306878306878307,
+      "B_roc_auc": 0.8747795414462082
+    },
+    "v1 + thumb_open fixed (optimistic, video-informed)": {
+      "A_accuracy_mean": 0.7875,
+      "A_accuracy_std": 0.012499999999999978,
+      "A_balanced_accuracy_mean": 0.7857142857142856,
+      "A_roc_auc_mean": 0.8760141093474427,
+      "B_accuracy": 0.7708333333333334,
+      "B_balanced_accuracy": 0.7645502645502645,
+      "B_roc_auc": 0.873015873015873
+    },
+    "blind: 3 phase inputs + 1 of 28 release-window inputs chosen in-fold": {
+      "A_accuracy_mean": 0.6604166666666667,
+      "A_accuracy_std": 0.0406650443665482,
+      "A_balanced_accuracy_mean": 0.6568783068783068,
+      "A_roc_auc_mean": 0.7305114638447971,
+      "B_accuracy": 0.6458333333333334,
+      "B_balanced_accuracy": 0.6375661375661376,
+      "B_roc_auc": 0.6754850088183422
+    }
+  },
+  "blind_release_picks": {
+    "d6_l_sh_y": 0.321,
+    "thumb_open_02s": 0.286,
+    "d9_l_wr_r": 0.161,
+    "open_frames": 0.125,
+    "finger_drop_2f": 0.071
+  },
+  "full_data": {
+    "v1": {
+      "accuracy_score_ge_50": 0.7291666666666666,
+      "roc_auc": 0.853615520282187,
+      "roc_auc_by_third(1-16,17-32,33-48)": [
+        0.708,
+        0.782,
+        0.896
+      ],
+      "spearman_with_episode_number": 0.725,
+      "mean_score_success": 66.68667185586402,
+      "mean_score_fail": 32.37973095149025
+    },
+    "v2": {
+      "accuracy_score_ge_50": 0.8333333333333334,
+      "roc_auc": 0.8888888888888888,
+      "roc_auc_by_third(1-16,17-32,33-48)": [
+        0.75,
+        0.982,
+        0.771
+      ],
+      "spearman_with_episode_number": 0.624,
+      "mean_score_success": 66.4424954819805,
+      "mean_score_fail": 29.81764678815401
+    }
+  },
+  "clusters": {
+    "v1_PR3": {
+      "bootstrap_ari": 0.5325143403530656,
+      "silhouette": 0.2072531610884528,
+      "eta2_episode_number": 0.722197754481732,
+      "success_rate": {
+        "0": 0.75,
+        "1": 0.4,
+        "2": 0.2
+      },
+      "size": {
+        "0": 28,
+        "1": 10,
+        "2": 10
+      },
+      "crosstab_video_type": {
+        "0": {
+          "A": 1,
+          "B": 6,
+          "S": 21
+        },
+        "1": {
+          "A": 6,
+          "B": 0,
+          "S": 4
+        },
+        "2": {
+          "A": 7,
+          "B": 1,
+          "S": 2
+        }
+      },
+      "ari_with_video_type": 0.278
+    },
+    "v2_mechanism": {
+      "bootstrap_ari": 0.7845870669437903,
+      "silhouette": 0.3409222211488892,
+      "eta2_episode_number": 0.2533581351370505,
+      "success_rate": {
+        "0": 0.84,
+        "1": 0.5,
+        "2": 0.18
+      },
+      "size": {
+        "0": 19,
+        "1": 18,
+        "2": 11
+      },
+      "names": {
+        "0": "clean carry and gentle release",
+        "1": "good carry, abrupt hand opening",
+        "2": "hesitant carry, unstable placement"
+      },
+      "centres_z": {
+        "0": {
+          "carry": 0.505,
+          "smooth": 0.419,
+          "release": 0.938
+        },
+        "1": {
+          "carry": 0.126,
+          "smooth": 0.353,
+          "release": -1.034
+        },
+        "2": {
+          "carry": -1.078,
+          "smooth": -1.302,
+          "release": 0.073
+        }
+      },
+      "crosstab_video_type": {
+        "0": {
+          "A": 0,
+          "B": 3,
+          "S": 16
+        },
+        "1": {
+          "A": 6,
+          "B": 3,
+          "S": 9
+        },
+        "2": {
+          "A": 8,
+          "B": 1,
+          "S": 2
+        }
+      },
+      "ari_with_video_type": 0.19
+    }
+  },
+  "per_failure_type_auc": {
+    "v1": {
+      "success(ep<=28)_vs_typeA": 0.779,
+      "success(ep>=19)_vs_typeB": 0.883
+    },
+    "v2": {
+      "success(ep<=28)_vs_typeA": 0.896,
+      "success(ep>=19)_vs_typeB": 0.825
+    }
+  }
+}

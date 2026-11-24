@@ -1,0 +1,227 @@
+{
+  "3rd: phase features 10 + LogReg C=1": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.6666666666666666,
+      "accuracy_std": 0.03486083443891981,
+      "balanced_accuracy_mean": 0.6571428571428571,
+      "roc_auc_mean": 0.7211640211640211,
+      "roc_auc_std": 0.0156251467772719
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.6875,
+      "balanced_accuracy": 0.6746031746031746,
+      "roc_auc": 0.6948853615520283
+    }
+  },
+  "phase features 10 + LogReg C=0.1": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.6895833333333334,
+      "accuracy_std": 0.031526554063378225,
+      "balanced_accuracy_mean": 0.6716931216931217,
+      "roc_auc_mean": 0.7398589065255732,
+      "roc_auc_std": 0.01503262246021871
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.7083333333333334,
+      "balanced_accuracy": 0.693121693121693,
+      "roc_auc": 0.7195767195767195
+    }
+  },
+  "4th: score >= 50, inputs re-chosen in each training fold": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.6958333333333334,
+      "accuracy_std": 0.042898458920779155,
+      "balanced_accuracy_mean": 0.6888888888888889,
+      "roc_auc_mean": 0.8095238095238095,
+      "roc_auc_std": 0.028471093448637845
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.7083333333333334,
+      "balanced_accuracy": 0.7089947089947091,
+      "roc_auc": 0.7865961199294533
+    }
+  },
+  "score >= 50, PR #4 inputs fixed (optimistic)": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.7145833333333333,
+      "accuracy_std": 0.01874999999999999,
+      "balanced_accuracy_mean": 0.7097883597883597,
+      "roc_auc_mean": 0.8462081128747796,
+      "roc_auc_std": 0.006150121966194979
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.7291666666666666,
+      "balanced_accuracy": 0.7275132275132274,
+      "roc_auc": 0.8483245149911817
+    }
+  },
+  "score, threshold tuned on training fold": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.7458333333333333,
+      "accuracy_std": 0.04039733214513607,
+      "balanced_accuracy_mean": 0.7571428571428571,
+      "roc_auc_mean": 0.8095238095238095,
+      "roc_auc_std": 0.028471093448637845
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.6666666666666666,
+      "balanced_accuracy": 0.6931216931216931,
+      "roc_auc": 0.7865961199294533
+    }
+  },
+  "trajectory 8x40 + LogReg C=0.1": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.7187499999999999,
+      "accuracy_std": 0.038696199210430646,
+      "balanced_accuracy_mean": 0.7055555555555555,
+      "roc_auc_mean": 0.7539682539682541,
+      "roc_auc_std": 0.051884535404766285
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.7291666666666666,
+      "balanced_accuracy": 0.716931216931217,
+      "roc_auc": 0.7724867724867726
+    }
+  },
+  "ROCKET 2000 kernels + ridge": {
+    "protocol_a_repeated_cv": {
+      "accuracy_mean": 0.65,
+      "accuracy_std": 0.03930825471690254,
+      "balanced_accuracy_mean": 0.6269841269841269,
+      "roc_auc_mean": 0.661904761904762,
+      "roc_auc_std": 0.03623083241432801
+    },
+    "protocol_b_recording_blocks": {
+      "accuracy": 0.5625,
+      "balanced_accuracy": 0.5211640211640212,
+      "roc_auc": 0.5714285714285714
+    }
+  },
+  "input_sets_chosen_in_training_folds": [
+    {
+      "inputs": [
+        "delta_hold_l_el_p",
+        "delta_hold_l_sh_r",
+        "rev_elp_hold",
+        "t_retract"
+      ],
+      "share": 0.62
+    },
+    {
+      "inputs": [
+        "delta_hold_l_el_p",
+        "delta_hold_l_sh_r",
+        "pose_grasp_l_sh_r",
+        "rev_elp_hold"
+      ],
+      "share": 0.1
+    },
+    {
+      "inputs": [
+        "delta_hold_l_el_p",
+        "delta_hold_l_sh_r",
+        "pose_grasp_l_sh_r",
+        "t_retract"
+      ],
+      "share": 0.08
+    },
+    {
+      "inputs": [
+        "delta_hold_l_el_p",
+        "delta_hold_l_sh_r",
+        "pose_release_l_el_p",
+        "rev_elp_hold"
+      ],
+      "share": 0.06
+    },
+    {
+      "inputs": [
+        "delta_hold_l_el_p",
+        "delta_hold_l_sh_r",
+        "pose_release_l_el_p",
+        "t_retract"
+      ],
+      "share": 0.04
+    }
+  ],
+  "input_frequency_in_training_folds": {
+    "delta_hold_l_sh_r": 1.0,
+    "delta_hold_l_el_p": 0.94,
+    "rev_elp_hold": 0.86,
+    "t_retract": 0.78,
+    "pose_grasp_l_sh_r": 0.24,
+    "pose_release_l_el_p": 0.12,
+    "t_reach": 0.04,
+    "t_hold": 0.02
+  },
+  "fails_wrong_in_80pct_of_seeds": {
+    "3rd: phase features 10 + LogReg C=1": [
+      10,
+      13,
+      21,
+      25,
+      35,
+      44
+    ],
+    "phase features 10 + LogReg C=0.1": [
+      10,
+      13,
+      21,
+      25,
+      28,
+      35,
+      44,
+      48
+    ],
+    "4th: score >= 50, inputs re-chosen in each training fold": [
+      21,
+      25,
+      28,
+      35,
+      44,
+      48
+    ],
+    "score >= 50, PR #4 inputs fixed (optimistic)": [
+      21,
+      25,
+      28,
+      35,
+      44,
+      48
+    ],
+    "score, threshold tuned on training fold": [],
+    "trajectory 8x40 + LogReg C=0.1": [
+      10,
+      11,
+      21,
+      25,
+      28,
+      44,
+      48
+    ],
+    "ROCKET 2000 kernels + ridge": [
+      10,
+      11,
+      15,
+      18,
+      19,
+      25,
+      28,
+      35,
+      44,
+      45,
+      48
+    ]
+  },
+  "fails_missed_by_most_models": [
+    10,
+    21,
+    25,
+    28,
+    35,
+    44,
+    48
+  ],
+  "protocol": "A: StratifiedKFold(5, shuffle) x seeds 0-9; B: 6 recording blocks of 8 episodes, leave one block out; selection/threshold fitted on training folds only",
+  "majority_baseline_accuracy": 0.5625
+}
