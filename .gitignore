@@ -26,3 +26,6 @@ Thumbs.db
 
 # Local inspection summaries contain absolute data paths.
 episode_summary.csv
+
+# Demo outputs are generated on demo day, not versioned.
+/reports/demo/
