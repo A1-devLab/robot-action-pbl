@@ -16,7 +16,9 @@ Why this rule (experiments/fourth_model_score_classifier.py, reports/fourth_mode
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -65,6 +67,7 @@ class EqualWeightClassifier:
     k: int = 4
     max_corr: float = 0.9
     threshold: float = DEFAULT_THRESHOLD
+    groups: dict[str, tuple[str, ...]] | None = None   # sub-scores, e.g. {"carry": (...), ...}
 
     def fit(self, F: pd.DataFrame, y=None) -> "EqualWeightClassifier":
         if self.directions is None:
@@ -95,6 +98,37 @@ class EqualWeightClassifier:
 
     def predict(self, F: pd.DataFrame) -> np.ndarray:
         return predict_from_score(self.score(F), self.threshold)
+
+    def group_z(self, F: pd.DataFrame) -> pd.DataFrame:
+        """Mean oriented z per sub-score group (0 = reference average, larger = better)."""
+        if not self.groups:
+            raise ValueError("No sub-score groups defined")
+        z = self.oriented(F)
+        return pd.DataFrame({g: z[list(cols)].mean(axis=1) for g, cols in self.groups.items()}, index=F.index)
+
+    def breakdown(self, F: pd.DataFrame) -> pd.DataFrame:
+        """Score plus 0-100 sub-scores per group (same convention as src.score)."""
+        sub = 100.0 * pd.DataFrame(norm.cdf(self.group_z(F)), index=F.index,
+                                   columns=[f"sub_{g}" for g in self.groups])
+        return sub.assign(score=self.score(F))
+
+    def save(self, path: str | Path) -> Path:
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {"directions": self.directions_, "mean": self.mean_.to_dict(), "std": self.std_.to_dict(),
+                   "std_s": self.std_s_, "threshold": self.threshold,
+                   "groups": {g: list(c) for g, c in (self.groups or {}).items()}}
+        path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return path
+
+    @classmethod
+    def load(cls, path: str | Path) -> "EqualWeightClassifier":
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        model = cls(directions=data["directions"], threshold=data["threshold"],
+                    groups={g: tuple(c) for g, c in data["groups"].items()} or None)
+        model.directions_ = dict(data["directions"])
+        model.mean_, model.std_, model.std_s_ = pd.Series(data["mean"]), pd.Series(data["std"]), data["std_s"]
+        return model
 
 
 def predict_from_score(score, threshold: float = DEFAULT_THRESHOLD) -> np.ndarray:

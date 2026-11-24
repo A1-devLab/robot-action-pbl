@@ -8,7 +8,7 @@
 - 해석 가능한 동작 유형 군집화
 - 수행 품질 점수 설계
 
-데이터 로더, 단계 분할과 단계 특징, 분류(4차 모델까지), 군집(k=3), 품질 점수와 이 셋을 한 번에 실행하는 데모 스크립트를 구현했습니다.
+데이터 로더, 단계 분할과 단계 특징, 분류(5차 모델까지), 군집(PR #3, v2), 품질 점수(PR #4, v2)와 이 셋을 한 번에 실행하는 데모 스크립트를 구현했습니다. 영상은 라벨 확인과 실패 유형 설명의 근거로만 씁니다.
 
 ## 환경 설정
 
@@ -57,10 +57,13 @@ robot-action-pbl/
 │   ├── phases.py          # 잡기·옮기기·놓기 단계 분할
 │   ├── features_phase.py  # 단계 특징 10개
 │   ├── cluster.py         # 과제 3: 군집
-│   ├── score.py           # 과제 4: 품질 점수
+│   ├── score.py           # 과제 4: 품질 점수 (PR #4, v1)
 │   ├── classify.py        # 과제 2: 점수 기반 분류기 (4차)
+│   ├── features_release.py # 놓는 순간 특징 (엄지 펴는 속도)
+│   ├── score_v2.py        # 과제 4·2: 품질 점수 v2와 5차 분류기
+│   ├── cluster_v2.py      # 과제 3: 군집 v2 (옮기기·매끄러움·놓기)
 │   └── demo.py            # 데모데이: 분류·군집·점수 한 번에 실행
-├── experiments/           # 모델 비교 실험 스크립트
+├── experiments/           # 모델 비교 실험·영상 근거 그림 스크립트
 ├── tests/
 └── reports/               # 분석 결과·그림
 ```
@@ -167,20 +170,60 @@ score = 100 × Φ(s / std_s)                   (Φ: 표준정규 누적분포)
 .\.venv\Scripts\python.exe -m experiments.fourth_model_score_classifier
 ```
 
+### 영상 근거: 라벨 확인과 실패 유형
+
+1차 데이터 영상 48개는 모두 CSV와 프레임 단위로 정렬되어 있어(CSV i번째 줄 = 영상 i번째 프레임), 로그로 찾은 순간의 장면을 바로 볼 수 있습니다. 과제 공지에 따라 영상은 모델 입력에 쓰지 않고 근거로만 씁니다.
+
+- 라벨 48개 모두 마지막 장면과 일치합니다.
+- 실패는 두 유형입니다.
+  - **A형 (14개, 1~28번)**: 높은 곳에서 또는 기울여 놓아 넘어짐
+  - **B형 (7개, 19~48번)**: 바닥에 세웠지만 손을 펴는 0.1~0.3초 사이에 손가락이 밀어 넘어뜨림
+- 자세한 내용·그림·재생성 방법: [영상 근거](reports/video_evidence/README.md)
+
+### 5차 모델: 점수 v2, 분류기 v2, 군집 v2 (데모 기본값)
+
+B형 실패는 손을 펴는 순간에 일어나는데, 4차까지의 특징은 그 순간을 보지 못합니다. 그래서 그 순간을 재는 로그 특징을 추가했습니다.
+
+- **새 특징** `thumb_open_02s` (`src/features_release.py`): 손가락이 펴지기 시작한 뒤 0.2초 동안 엄지가 벌어진 양
+- **점수 v2** (`src/score_v2.py`): PR #4 점수의 `t_retract`(놓은 뒤 복귀 시간)를 `thumb_open_02s`로 교체. 하위 점수는 `sub_carry`, `sub_smooth`, `sub_release`
+- **분류기 v2**: 점수 v2 ≥ 50 → 성공
+- **군집 v2** (`src/cluster_v2.py`): 하위 점수 3개로 K-평균 k=3
+  - C0 깔끔하게 옮기고 부드럽게 놓음 (19개, 성공률 84%)
+  - C1 잘 옮기지만 손을 급하게 폄 (18개, 50%)
+  - C2 머뭇거리며 불안정하게 내려놓음 (11개, 18%)
+
+| 모델 | A 정확도 | A AUC | B 정확도 | B AUC |
+|---|---:|---:|---:|---:|
+| 4차 (입력을 학습 fold에서 다시 선택, 공정한 추정) | 0.696 | 0.810 | 0.708 | 0.787 |
+| 5차 v2 (낙관적: 특징을 영상·라벨을 보고 고름) | 0.829 | 0.884 | 0.833 | 0.875 |
+
+- v2 수치는 낙관적입니다. 영상 없이 데이터만으로 특징을 고르게 하면 개선이 없었습니다(정확도 0.660). 새 데이터에서 v1과 v2를 다시 비교해야 합니다.
+- 군집 v2는 PR #3보다 안정적이고(부트스트랩 ARI 0.53 → 0.78), 녹화 순서에 덜 묶여 있습니다(에피소드 번호 η² 0.72 → 0.25).
+- B형 실패 7개 중 4개는 v2도 놓칩니다.
+- 자세한 비교: [5차 실험 보고서](reports/fifth_model/README.md)
+
+```powershell
+.\.venv\Scripts\python.exe -m experiments.fifth_model_release
+```
+
 ### 데모 실행 (데모데이)
 
 `src/demo.py`는 지정한 폴더 바로 아래의 모든 CSV(하위 폴더는 `success/`, `fail/`만 인식)에 분류(과제 2), 군집(과제 3), 품질 점수(과제 4)를 한 번에 적용합니다.
 
 ```powershell
-# 라벨 없는 CSV 폴더 (파일 이름 제한 없음)
+# 라벨 없는 CSV 폴더 (파일 이름 제한 없음), 기본값 v2
 .\.venv\Scripts\python.exe -m src.demo --data-dir <테스트 데이터 폴더>
+# 4차 모델·PR #4 점수·PR #3 군집으로 실행
+.\.venv\Scripts\python.exe -m src.demo --data-dir <테스트 데이터 폴더> --version v1
 # success/, fail/ 폴더가 있으면 정확도·혼동행렬도 출력
 .\.venv\Scripts\python.exe -m src.demo --data-dir data
 ```
 
 - 군집 모델은 실행할 때 `data/`의 기준 에피소드 48개로 다시 학습합니다(결과 고정, 약 1초). 저장된 모델 파일이 필요 없습니다.
-- 품질 점수는 `reports/score/params.json`의 고정 기준 통계를 씁니다.
-- 결과는 `reports/demo/results.csv`에 저장됩니다(`--output`으로 변경 가능, Git 제외). 열은 `status`, `prediction`, `score`, `sub_carry`, `sub_smooth`, `sub_exit`, `cluster`, `cluster_name`과 입력 특징입니다.
+- 품질 점수는 고정 기준 통계를 씁니다: v2는 `reports/score_v2/params.json`, v1은 `reports/score/params.json`.
+- 결과는 `reports/demo/results.csv`에 저장됩니다(`--output`으로 변경 가능, Git 제외).
+  - 공통 열: `status`, `prediction`, `score`, `cluster`, `cluster_name`, 입력 특징
+  - 하위 점수 열: v2는 `sub_carry`, `sub_smooth`, `sub_release`, v1은 `sub_carry`, `sub_smooth`, `sub_exit`
 - `status`는 `ok`, `no_grasp`(손이 닫히지 않음 → 실패, 0점), `invalid`(파일 검사 실패), `error`(그 파일만 처리 실패)입니다. 파일 하나가 잘못돼도 나머지는 계속 처리합니다.
 - `data/`를 쓸 수 없으면 경고를 출력하고 군집 없이 분류·점수만 계산합니다.
 
@@ -193,6 +236,8 @@ score = 100 × Φ(s / std_s)                   (Φ: 표준정규 누적분포)
 
 ## 다음 작업
 
-1. 대부분의 모델이 계속 틀리는 실패(에피소드 10, 21, 25, 28, 35, 44, 48)의 움직임 분석
-2. 기구학 정보(URDF 또는 링크 길이)를 받으면 놓는 순간의 손 높이·기울기 특징 추가
-3. 데모 리허설: 라벨 없는 폴더, 바뀐 파일 이름, 깨진 파일로 `src.demo` 실행 확인 (Windows)
+1. 영상에서 얻은 통찰로 특징을 정한 것(`thumb_open_02s`)을 보고서에 어떻게 쓸지 교수님·TA에게 확인
+2. 추가 데이터가 오면 학습에 넣기 전에 v1과 v2를 먼저 그 데이터로 비교
+3. B형 실패(손을 펴는 순간 넘어뜨림) 중 v2도 놓치는 21, 25, 44, 48번 분석
+4. 기구학 정보(URDF 또는 링크 길이)를 받으면 놓는 순간의 손 높이·기울기 특징 추가
+5. 데모 리허설: 라벨 없는 폴더, 바뀐 파일 이름, 깨진 파일로 `src.demo` 실행 확인 (Windows)
